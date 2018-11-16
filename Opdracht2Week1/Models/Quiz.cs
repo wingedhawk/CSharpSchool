@@ -9,14 +9,14 @@ namespace Opdracht2Week1
 
     class Quiz
     {
-        public delegate List<IVraag> MethodDelegate();
+        public delegate List<IQuestionAble> MethodDelegate();
         public delegate String MethodDelegate2();
-        public List<IVraag> Vragen = new List<IVraag>();
+        public List<IQuestionAble> Vragen = new List<IQuestionAble>();
 
         List<Delegate> Delegates = new List<Delegate>();
         List<MethodDelegate> DelList;
 
-        public Quiz(List<IVraag> vragen)
+        public Quiz(List<IQuestionAble> vragen)
         {
             DelList = new List<MethodDelegate> { GetCategorieVragen, GetMoeilijkheidVragen, GetOrderedLijst };
             this.Vragen = vragen;
@@ -31,20 +31,24 @@ namespace Opdracht2Week1
             return int.Parse(Console.ReadLine());
         }
 
-        public List<IVraag> InitMode(int question)
+        public List<IQuestionAble> InitMode(int question)
         {
             return DelList[question-1]();
         }
 
-        public void StartQuiz(List<IVraag> lijst)
+        public void StartQuiz(List<IQuestionAble> lijst)
         {
-            Boolean right;
-            foreach(IVraag vraag in lijst)
+            foreach(IQuestionAble vraag in lijst)
             {
-                right = false;
+                MultipleChoiceQuestion testType = (MultipleChoiceQuestion)vraag;
+                
                 Console.WriteLine("Graad:{0} Categorie:{1} \n {2}", vraag.Moeilijkheidsgraad, 
                     vraag.CategorieString, vraag.VraagString);
-                while (!right)
+                if (testType.FalseAnswers != null)
+                {
+                    testType.ShowAnswers();
+                }
+                while (true)
                 {
                     if (Console.ReadLine() != vraag.Antwoord)
                     {
@@ -53,34 +57,34 @@ namespace Opdracht2Week1
                     else
                     {
                         Console.WriteLine("---------------------- \n CORRECT MOVE ON");
-                        right = true;
+                        break;
                     }
                 }
             }
         }
 
-        public List<IVraag> GetOrderedLijst()
+        public List<IQuestionAble> GetOrderedLijst()
         {
             var returnVragen = Vragen.OrderBy(v => v.Moeilijkheidsgraad).ToList();
             Console.WriteLine("U krijgt alle vragen");
             return returnVragen;
         }
 
-        public List<IVraag> GetMoeilijkheidVragen()
+        public List<IQuestionAble> GetMoeilijkheidVragen()
         {
             Console.WriteLine("Welke moeilijkheid wilt u?");
             Console.WriteLine("1 t/m 3");
             int graad = int.Parse(Console.ReadLine());
-            IEnumerable<IVraag> specificList = from v in Vragen where graad == v.Moeilijkheidsgraad select v;
+            IEnumerable<IQuestionAble> specificList = from v in Vragen where graad == v.Moeilijkheidsgraad select v;
             return specificList.ToList();
         }
 
-        public List<IVraag> GetCategorieVragen()
+        public List<IQuestionAble> GetCategorieVragen()
         {
             Console.WriteLine("Welke categorie wilt u kiezen?");
             Console.WriteLine("Alphabet, Ascii - Voer de volledig naam inclusief hoofdletter");
             string categorie = Console.ReadLine();
-            IEnumerable<IVraag> specificList = from v in Vragen where categorie == v.CategorieString select v;
+            IEnumerable<IQuestionAble> specificList = from v in Vragen where categorie == v.CategorieString select v;
             return specificList.ToList();
         }
 

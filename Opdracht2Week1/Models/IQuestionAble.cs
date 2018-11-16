@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Opdracht2Week1.Models
 {
-    interface IVraag
+    interface IQuestionAble
     {
         int Moeilijkheidsgraad { get; set; }
         string CategorieString { get; set; }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Opdracht2Week1.Models
 {
-    class OpenVraag : IVraag
+    class OpenVraag : IQuestionAble
     {
         public int Moeilijkheidsgraad { get; set; }
         public string CategorieString { get; set; }
